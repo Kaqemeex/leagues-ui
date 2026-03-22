@@ -106,5 +106,60 @@
     { "tier": "Iron", "pointsRequired": 500 },
     { "tier": "Steel", "pointsRequired": 1500 },
     { "tier": "Mithril", "pointsRequired": 3000 }
+  ],
+  "locations": [
+    {
+      "id": "loc-lumbridge",
+      "name": "Lumbridge",
+      "activityTypes": ["woodcutting", "cooking", "combat", "quest", "thieving"],
+      "tile": { "x": 3222, "y": 3218, "plane": 0 },
+      "regionId": "misthalin",
+      "notes": "Starting area with castle, trees, and fishing spots."
+    },
+    {
+      "id": "loc-varrock",
+      "name": "Varrock",
+      "activityTypes": ["combat", "mining", "smithing", "magic", "quest"],
+      "tile": { "x": 3210, "y": 3424, "plane": 0 },
+      "regionId": "misthalin",
+      "notes": "Major city with grand exchange, mine to the south, and various quest NPCs."
+    },
+    {
+      "id": "loc-al-kharid",
+      "name": "Al Kharid",
+      "activityTypes": ["smithing", "mining", "thieving", "combat", "crafting"],
+      "tile": { "x": 3293, "y": 3174, "plane": 0 },
+      "regionId": "misthalin",
+      "notes": "Desert city with furnace for smelting and mine nearby."
+    },
+    {
+      "id": "loc-draynor",
+      "name": "Draynor Village",
+      "activityTypes": ["fishing", "thieving", "woodcutting", "quest"],
+      "tile": { "x": 3092, "y": 3243, "plane": 0 },
+      "regionId": "misthalin",
+      "notes": "Quiet village with a jail, fishing spots, and Draynor manor nearby."
+    },
+    {
+      "id": "loc-karamja-agility",
+      "name": "Karamja Agility Course",
+      "activityTypes": ["agility", "fishing", "combat", "slayer"],
+      "tile": { "x": 2755, "y": 3144, "plane": 0 },
+      "regionId": "karamja",
+      "notes": "Brimhaven agility arena and Karamja fishing spots. Also home to TzHaar city and the Inferno."
+    }
+  ],
+  "taskLocations": [
+    { "taskId": "task-001", "locationId": "loc-lumbridge", "isPrimary": true },
+    { "taskId": "task-002", "locationId": "loc-lumbridge", "isPrimary": true },
+    { "taskId": "task-003", "locationId": "loc-draynor", "isPrimary": true },
+    { "taskId": "task-003", "locationId": "loc-varrock", "isPrimary": false },
+    { "taskId": "task-004", "locationId": "loc-lumbridge", "isPrimary": true },
+    { "taskId": "task-005", "locationId": "loc-al-kharid", "isPrimary": true },
+    { "taskId": "task-006", "locationId": "loc-varrock", "isPrimary": true },
+    { "taskId": "task-007", "locationId": "loc-karamja-agility", "isPrimary": true },
+    { "taskId": "task-008", "locationId": "loc-karamja-agility", "isPrimary": true },
+    { "taskId": "task-009", "locationId": "loc-karamja-agility", "isPrimary": true },
+    { "taskId": "task-010", "locationId": "loc-karamja-agility", "isPrimary": true }
   ]
 }

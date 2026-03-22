@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+
+# local env / secrets
+.env
+.env.local
+.env.*.local
+
+# Claude Code — local overrides (personal permissions, machine-specific paths)
+.claude/settings.local.json
+
+# raw scraped data (large, reproducible)
+data/raw/*/raw-tasks.json
+data/raw/*/raw-locations.json
+
+# scraper HTTP cache (reproducible)
+data/raw/.cache/
+
+# OS
+.DS_Store

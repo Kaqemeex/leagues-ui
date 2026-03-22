@@ -1,0 +1,110 @@
+{
+  "id": "sample",
+  "name": "Sample League",
+  "regions": [
+    { "id": "misthalin", "name": "Misthalin" },
+    { "id": "karamja", "name": "Karamja" }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "name": "Chop a Tree",
+      "description": "Chop any tree in Lumbridge.",
+      "region": "misthalin",
+      "difficulty": "Easy",
+      "skills": ["Woodcutting"],
+      "points": 10
+    },
+    {
+      "id": "task-002",
+      "name": "Cook a Shrimp",
+      "description": "Cook a shrimp on the Lumbridge castle range.",
+      "region": "misthalin",
+      "difficulty": "Easy",
+      "skills": ["Cooking", "Fishing"],
+      "points": 10
+    },
+    {
+      "id": "task-003",
+      "name": "Complete Vampire Slayer",
+      "description": "Complete the Vampire Slayer quest.",
+      "region": "misthalin",
+      "difficulty": "Medium",
+      "skills": ["Attack", "Strength"],
+      "points": 50,
+      "relicTier": 1
+    },
+    {
+      "id": "task-004",
+      "name": "Pickpocket a Man",
+      "description": "Successfully pickpocket a man in Lumbridge.",
+      "region": "misthalin",
+      "difficulty": "Easy",
+      "skills": ["Thieving"],
+      "points": 10
+    },
+    {
+      "id": "task-005",
+      "name": "Smelt a Gold Bar",
+      "description": "Smelt a gold bar at the Al Kharid furnace.",
+      "region": "misthalin",
+      "difficulty": "Medium",
+      "skills": ["Smithing", "Mining"],
+      "points": 50
+    },
+    {
+      "id": "task-006",
+      "name": "Reach 40 Magic",
+      "description": "Achieve level 40 Magic.",
+      "region": "misthalin",
+      "difficulty": "Medium",
+      "skills": ["Magic"],
+      "points": 50
+    },
+    {
+      "id": "task-007",
+      "name": "Complete Karamja Agility Course",
+      "description": "Complete a full lap of the Karamja agility course.",
+      "region": "karamja",
+      "difficulty": "Hard",
+      "skills": ["Agility"],
+      "points": 100,
+      "relicTier": 2
+    },
+    {
+      "id": "task-008",
+      "name": "Catch a Karambwan",
+      "description": "Successfully catch a karambwan on Karamja.",
+      "region": "karamja",
+      "difficulty": "Hard",
+      "skills": ["Fishing"],
+      "points": 100
+    },
+    {
+      "id": "task-009",
+      "name": "Obtain a Dragon Sword",
+      "description": "Obtain a dragon sword from TzHaar-Ket-Rak's challenges.",
+      "region": "karamja",
+      "difficulty": "Elite",
+      "skills": ["Slayer", "Attack"],
+      "points": 250,
+      "relicTier": 3
+    },
+    {
+      "id": "task-010",
+      "name": "Defeat TzKal-Zuk",
+      "description": "Defeat TzKal-Zuk in the Inferno.",
+      "region": "karamja",
+      "difficulty": "Master",
+      "skills": ["Ranged", "Prayer", "Defence"],
+      "points": 500,
+      "relicTier": 4
+    }
+  ],
+  "pointTiers": [
+    { "tier": "Bronze", "pointsRequired": 0 },
+    { "tier": "Iron", "pointsRequired": 500 },
+    { "tier": "Steel", "pointsRequired": 1500 },
+    { "tier": "Mithril", "pointsRequired": 3000 }
+  ]
+}

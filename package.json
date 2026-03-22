@@ -7,7 +7,9 @@
     "build": "tsc && vite build",
     "typecheck": "tsc --noEmit",
     "validate-data": "tsx scripts/build-data.ts",
-    "scrape": "tsx scripts/scrape-tasks.ts"
+    "scrape": "tsx scripts/scrape-tasks.ts",
+    "scrape:tasks": "tsx scripts/scrape-tasks.ts",
+    "scrape:locations": "tsx scripts/scrape-locations.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

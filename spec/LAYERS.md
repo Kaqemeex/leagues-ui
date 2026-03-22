@@ -11,12 +11,12 @@ files that share the same number can be built in parallel (e.g. all five Layer
 
 | Layer | Spec file | PR | Status |
 |---|---|---|---|
-| 01 — Site Overview | spec/01-site-overview.md | [#1](https://github.com/Kaqemeex/leagues-ui/pull/1) | OPEN |
+| 01 — Site Overview | spec/01-site-overview.md | [#1](https://github.com/Kaqemeex/leagues-ui/pull/1) | MERGED |
 | 02 — Data Design | spec/02-data-design.md | [#2](https://github.com/Kaqemeex/leagues-ui/pull/2) | MERGED |
 | 03 — Task Map | spec/03-task-map.md | [#3](https://github.com/Kaqemeex/leagues-ui/pull/3) | MERGED |
-| 04 — Route Planning | spec/04-route-planning.md | [#4](https://github.com/Kaqemeex/leagues-ui/pull/4) | OPEN |
-| 05 — Task Tracking | spec/05-task-tracking.md | [#5](https://github.com/Kaqemeex/leagues-ui/pull/5) | OPEN |
-| 06 — Data Assembly | spec/06-data-assembly.md | [#6](https://github.com/Kaqemeex/leagues-ui/pull/6) | OPEN |
+| 04 — Route Planning | spec/04-route-planning.md | [#4](https://github.com/Kaqemeex/leagues-ui/pull/4) | MERGED |
+| 05 — Task Tracking | spec/05-task-tracking.md | [#5](https://github.com/Kaqemeex/leagues-ui/pull/5) | MERGED |
+| 06 — Data Assembly | spec/06-data-assembly.md | [#6](https://github.com/Kaqemeex/leagues-ui/pull/6) | MERGED |
 
 ---
 

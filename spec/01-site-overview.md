@@ -98,6 +98,8 @@ Footer
   Used for: parsing league JSON bundles, validating localStorage state on load
   (handles corruption/migration), parsing URL query params, and validating
   pipeline output in `build-data.ts` (replaces bespoke validator logic).
+- **Linting**: oxlint — fast Rust-based linter (via `npx oxlint` or `oxc`); replaces ESLint for rule enforcement. Run as part of CI and as a pre-commit check.
+- **Formatting**: oxfmt — Rust-based formatter for TypeScript/JavaScript. Configured via `oxfmt.toml`; run on save in editor and enforced in CI (`oxfmt --check`).
 - **Testing**: Playwright. Tests drive the locally-running dev server; Claude
   can interact with the app via browser automation to verify behavior.
 - **Hosting**: local dev server (`vite dev`) during development. Deployment TBD.

@@ -1,9 +1,13 @@
 import { useLeague } from '../contexts/LeagueContext'
 import { loadLeague } from '../lib/data'
+import { useFilteredTasks } from '../hooks/useFilteredTasks'
+import { RegionFilterBar } from '../components/RegionFilterBar'
 
 export function TasksPage() {
   const { selectedLeagueId } = useLeague()
   const league = loadLeague(selectedLeagueId)
+
+  const filteredTasks = useFilteredTasks(league?.tasks ?? [])
 
   if (!league) {
     return <p className="text-gray-500">No data available</p>
@@ -12,6 +16,7 @@ export function TasksPage() {
   return (
     <div className="max-w-5xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">{league.name} — Tasks</h1>
+      <RegionFilterBar tasks={league.tasks} />
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
@@ -23,7 +28,7 @@ export function TasksPage() {
             </tr>
           </thead>
           <tbody>
-            {league.tasks.map(task => (
+            {filteredTasks.map(task => (
               <tr key={task.id} className="odd:bg-white even:bg-gray-50 hover:bg-yellow-50">
                 <td className="px-3 py-2 border font-medium">{task.name}</td>
                 <td className="px-3 py-2 border capitalize">{task.region}</td>

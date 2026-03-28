@@ -11,6 +11,8 @@ dist/
 
 # Claude Code — local overrides (personal permissions, machine-specific paths)
 .claude/settings.local.json
+.claude/worktrees/*
+.claude/scheduled_tasks.lock
 
 # raw scraped data (large, reproducible)
 data/raw/*/raw-tasks.json

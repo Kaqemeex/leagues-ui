@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { LatLngBoundsExpression } from 'leaflet'
@@ -7,10 +8,11 @@ import { useLeague } from '../contexts/LeagueContext'
 import { loadLeague } from '../lib/data'
 import { RegionFilterBar } from '../components/RegionFilterBar'
 import { TaskMarker } from '../components/map/TaskMarker'
+import { TaskDetailPanel } from '../components/map/TaskDetailPanel'
 import { RegionOverlay } from '../components/map/RegionOverlay'
 import { useUserState } from '../hooks/useUserState'
 import { useFilter } from '../contexts/FilterContext'
-import type { Task } from '../schemas'
+import type { Location, Task } from '../schemas'
 
 const TILE_URL =
   (import.meta.env.VITE_TILE_SERVER_URL as string | undefined) ??
@@ -58,8 +60,9 @@ export function MapPage() {
   const { plane } = usePlane(0)
   const { selectedLeagueId } = useLeague()
   const league = loadLeague(selectedLeagueId)
-  const { state } = useUserState()
+  const { state, toggleTask, addTaskToList } = useUserState()
   const { filters } = useFilter()
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
 
   // Build a map from locationId -> Task[] using the taskLocations join table
   const tasksByLocation = new Map<string, Task[]>()
@@ -94,26 +97,37 @@ export function MapPage() {
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 8rem)' }}>
       <RegionFilterBar tasks={league?.tasks ?? []} />
-      <MapContainer
-        center={LUMBRIDGE_CENTER}
-        zoom={7}
-        crs={OsrsCrs}
-        zoomControl={false}
-        style={{ flex: 1, background: '#1a1a2e' }}
-      >
-        <ZoomControl position="topright" />
-        <OsrsTileLayer plane={plane} />
-        <MapControls plane={plane} />
-        <RegionOverlay />
-        {visibleLocations.map(loc => (
-          <TaskMarker
-            key={loc.id}
-            location={loc}
-            tasks={tasksByLocation.get(loc.id) ?? []}
-            completedIds={state.completedTaskIds}
-          />
-        ))}
-      </MapContainer>
+      <div className="relative flex-1">
+        <MapContainer
+          center={LUMBRIDGE_CENTER}
+          zoom={7}
+          crs={OsrsCrs}
+          zoomControl={false}
+          style={{ height: '100%', background: '#1a1a2e' }}
+        >
+          <ZoomControl position="topright" />
+          <OsrsTileLayer plane={plane} />
+          <MapControls plane={plane} />
+          <RegionOverlay />
+          {visibleLocations.map(loc => (
+            <TaskMarker
+              key={loc.id}
+              location={loc}
+              tasks={tasksByLocation.get(loc.id) ?? []}
+              completedIds={state.completedTaskIds}
+              onClick={loc => setSelectedLocation(loc)}
+            />
+          ))}
+        </MapContainer>
+        <TaskDetailPanel
+          location={selectedLocation}
+          tasks={tasksByLocation.get(selectedLocation?.id ?? '') ?? []}
+          completedIds={state.completedTaskIds}
+          onClose={() => setSelectedLocation(null)}
+          onToggleTask={toggleTask}
+          onAddToList={taskId => { if (state.activeTaskListId) addTaskToList(state.activeTaskListId, taskId) }}
+        />
+      </div>
     </div>
   )
 }

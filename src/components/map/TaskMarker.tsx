@@ -8,9 +8,10 @@ interface Props {
   location: Location
   tasks: Task[]
   completedIds: Set<string>
+  onClick: (location: Location) => void
 }
 
-export function TaskMarker({ location, tasks, completedIds }: Props) {
+export function TaskMarker({ location, tasks, completedIds, onClick }: Props) {
   const position = osrsTileToLatLng(location.tile.x, location.tile.y)
   const allDone = tasks.length > 0 && tasks.every(t => completedIds.has(t.id))
   const anyDone = tasks.some(t => completedIds.has(t.id))
@@ -27,7 +28,7 @@ export function TaskMarker({ location, tasks, completedIds }: Props) {
   })
 
   return (
-    <Marker position={position} icon={icon}>
+    <Marker position={position} icon={icon} eventHandlers={{ click: () => onClick(location) }}>
       <Popup>
         <div style={{ minWidth: 160 }}>
           <strong>{location.name}</strong>

@@ -1,0 +1,6 @@
+{
+  "leagues": [
+    { "id": "trailblazer-reloaded", "name": "Trailblazer Reloaded" },
+    { "id": "sample", "name": "Sample League" }
+  ]
+}

@@ -6,7 +6,9 @@ import { usePlane } from '../hooks/usePlane'
 import { useLeague } from '../contexts/LeagueContext'
 import { loadLeague } from '../lib/data'
 import { RegionFilterBar } from '../components/RegionFilterBar'
-import { LocationMarker } from '../components/map/LocationMarker'
+import { TaskMarker } from '../components/map/TaskMarker'
+import { useUserState } from '../hooks/useUserState'
+import type { Task } from '../schemas'
 
 const TILE_URL =
   (import.meta.env.VITE_TILE_SERVER_URL as string | undefined) ??
@@ -54,6 +56,20 @@ export function MapPage() {
   const { plane } = usePlane(0)
   const { selectedLeagueId } = useLeague()
   const league = loadLeague(selectedLeagueId)
+  const { state } = useUserState()
+
+  // Build a map from locationId -> Task[] using the taskLocations join table
+  const tasksByLocation = new Map<string, Task[]>()
+  const taskIndex = new Map<string, Task>()
+  for (const task of (league?.tasks ?? [])) {
+    taskIndex.set(task.id, task)
+  }
+  for (const tl of (league?.taskLocations ?? [])) {
+    const task = taskIndex.get(tl.taskId)
+    if (!task) continue
+    if (!tasksByLocation.has(tl.locationId)) tasksByLocation.set(tl.locationId, [])
+    tasksByLocation.get(tl.locationId)!.push(task)
+  }
 
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 8rem)' }}>
@@ -69,7 +85,12 @@ export function MapPage() {
         <OsrsTileLayer plane={plane} />
         <MapControls plane={plane} />
         {(league?.locations ?? []).map(loc => (
-          <LocationMarker key={loc.id} location={loc} />
+          <TaskMarker
+            key={loc.id}
+            location={loc}
+            tasks={tasksByLocation.get(loc.id) ?? []}
+            completedIds={state.completedTaskIds}
+          />
         ))}
       </MapContainer>
     </div>

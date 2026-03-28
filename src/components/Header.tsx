@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useLeague } from '../contexts/LeagueContext'
 import { useFilter } from '../contexts/FilterContext'
+import { PointsChip } from './PointsChip'
 
 export function Header() {
   const { leagues, selectedLeagueId, setSelectedLeagueId } = useLeague()
@@ -22,7 +23,7 @@ export function Header() {
         onChange={e => setSearch(e.target.value)}
         className="flex-1 bg-gray-700 text-white rounded px-2 py-1 text-sm"
       />
-      <span className="text-sm bg-yellow-600 rounded px-2 py-1">0 pts</span>
+      <PointsChip />
       <nav className="flex gap-3 text-sm">
         {[
           { to: '/tasks', label: 'Tasks' },

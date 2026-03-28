@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { LocationSchema, TaskLocationSchema } from './location.js'
 
 export const SkillSchema = z.enum([
   'Attack',
@@ -57,8 +56,6 @@ export const LeagueSchema = z.object({
   regions: z.array(RegionSchema),
   tasks: z.array(TaskSchema),
   pointTiers: z.array(PointTierSchema),
-  locations: z.array(LocationSchema).optional(),
-  taskLocations: z.array(TaskLocationSchema).optional(),
 })
 
 export type Skill = z.infer<typeof SkillSchema>

@@ -1,0 +1,22 @@
+{
+  "Agility_training_areas": "agility",
+  "Mining_sites": "mining",
+  "Fishing_spots": "fishing",
+  "Slayer_masters": "slayer",
+  "Farming_patches": "farming",
+  "Woodcutting_trees": "woodcutting",
+  "Runecrafting_altars": "runecraft",
+  "Smithing_locations": "smithing",
+  "Cooking_ranges": "cooking",
+  "Firemaking_locations": "firemaking",
+  "Thieving_locations": "thieving",
+  "Herblore_locations": "herblore",
+  "Crafting_locations": "crafting",
+  "Fletching_locations": "fletching",
+  "Hunter_locations": "hunter",
+  "Construction_locations": "construction",
+  "Prayer_locations": "prayer",
+  "Magic_training_areas": "magic",
+  "Combat_training_areas": "combat",
+  "Quest_start_points": "quest"
+}

@@ -3,6 +3,7 @@ import { LeagueProvider } from './contexts/LeagueContext'
 import { FilterProvider } from './contexts/FilterContext'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
+import { UrlStateSync } from './components/UrlStateSync'
 import { DashboardPage } from './pages/DashboardPage'
 import { TasksPage } from './pages/TasksPage'
 import { MapPage } from './pages/MapPage'
@@ -14,6 +15,7 @@ export default function App() {
   return (
     <LeagueProvider>
       <FilterProvider>
+        <UrlStateSync />
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-1 p-4">

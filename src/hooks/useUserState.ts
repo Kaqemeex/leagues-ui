@@ -34,6 +34,7 @@ interface UserStateStore {
   addTaskToList: (listId: string, taskId: string) => void
   removeTaskFromList: (listId: string, taskId: string) => void
   renameTaskList: (id: string, name: string) => void
+  resetProgress: () => void
 }
 
 export const useUserState = create<UserStateStore>()(set => ({
@@ -150,6 +151,18 @@ export const useUserState = create<UserStateStore>()(set => ({
         return { ...list, name, lastModified: Date.now() }
       })
       const nextState: UserState = { ...store.state, taskLists }
+      saveState(nextState)
+      return { state: nextState }
+    }),
+
+  resetProgress: () =>
+    set(store => {
+      const nextState: UserState = {
+        ...store.state,
+        completedTaskIds: new Set<string>(),
+        taskLists: [],
+        routePlans: [],
+      }
       saveState(nextState)
       return { state: nextState }
     }),

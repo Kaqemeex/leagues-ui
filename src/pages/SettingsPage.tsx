@@ -1,7 +1,16 @@
 import { useLeague } from '../contexts/LeagueContext'
+import { useUserState } from '../hooks/useUserState'
+import { loadLeagues } from '../lib/data'
 
 export function SettingsPage() {
-  const { leagues, selectedLeagueId, setSelectedLeagueId } = useLeague()
+  const { setSelectedLeagueId } = useLeague()
+  const { state, setCharacterName, setPreference, setSelectedLeague, resetProgress } = useUserState()
+  const leagues = loadLeagues()
+
+  function handleLeagueChange(id: string) {
+    setSelectedLeague(id)
+    setSelectedLeagueId(id)
+  }
 
   return (
     <div className="max-w-lg mx-auto space-y-8">
@@ -13,8 +22,8 @@ export function SettingsPage() {
           <label htmlFor="league-select" className="text-sm text-gray-600">Active league</label>
           <select
             id="league-select"
-            value={selectedLeagueId}
-            onChange={e => setSelectedLeagueId(e.target.value)}
+            value={state.selectedLeagueId}
+            onChange={e => handleLeagueChange(e.target.value)}
             className="border rounded px-3 py-2 text-sm"
           >
             {leagues.map(l => (
@@ -25,22 +34,50 @@ export function SettingsPage() {
       </section>
 
       <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Character</h2>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="character-name" className="text-sm text-gray-600">Character name</label>
+          <input
+            id="character-name"
+            type="text"
+            value={state.preferences.characterName}
+            onChange={e => setCharacterName(e.target.value)}
+            placeholder="Enter character name"
+            className="border rounded px-3 py-2 text-sm"
+          />
+        </div>
+      </section>
+
+      <section className="space-y-3">
         <h2 className="text-lg font-semibold">Preferences</h2>
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm text-gray-600">Show completed tasks</label>
-            <input type="checkbox" className="w-4 h-4" disabled />
-          </div>
-          <div className="flex items-center justify-between">
-            <label className="text-sm text-gray-600">Dark mode</label>
-            <input type="checkbox" className="w-4 h-4" disabled />
-          </div>
-          <div className="flex items-center justify-between">
-            <label className="text-sm text-gray-600">Compact task list</label>
-            <input type="checkbox" className="w-4 h-4" disabled />
+            <label htmlFor="show-completed-on-map" className="text-sm text-gray-600">
+              Show completed on map
+            </label>
+            <input
+              id="show-completed-on-map"
+              type="checkbox"
+              checked={state.preferences.showCompletedOnMap}
+              onChange={e => setPreference('showCompletedOnMap', e.target.checked)}
+              className="w-4 h-4"
+            />
           </div>
         </div>
-        <p className="text-xs text-gray-400">Preferences are not saved yet.</p>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Data</h2>
+        <button
+          onClick={() => {
+            if (confirm('Reset all progress? This will clear completed tasks, task lists, and route plans.')) {
+              resetProgress()
+            }
+          }}
+          className="px-4 py-2 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+        >
+          Reset all progress
+        </button>
       </section>
     </div>
   )

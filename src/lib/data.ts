@@ -5,6 +5,16 @@ import sampleData from '../../data/leagues/sample.json' with { type: 'json' }
 
 const leagueCache = new Map<string, League>()
 
+export interface LeagueInfo { id: string; name: string }
+
+const AVAILABLE_LEAGUES: LeagueInfo[] = [
+  { id: 'sample', name: 'Sample League' },
+]
+
+export function loadLeagues(): LeagueInfo[] {
+  return AVAILABLE_LEAGUES
+}
+
 export function loadLeague(leagueId: string): League | null {
   if (leagueCache.has(leagueId)) return leagueCache.get(leagueId)!
   if (leagueId === 'sample') {

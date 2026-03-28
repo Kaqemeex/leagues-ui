@@ -6,10 +6,13 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "typecheck": "tsc --noEmit",
+    "lint": "oxlint .",
+    "format:check": "oxfmt --check .",
     "validate-data": "tsx scripts/build-data.ts",
     "scrape": "tsx scripts/scrape-tasks.ts",
     "scrape:tasks": "tsx scripts/scrape-tasks.ts",
-    "scrape:locations": "tsx scripts/scrape-locations.ts"
+    "scrape:locations": "tsx scripts/scrape-locations.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -24,6 +27,8 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
+    "husky": "^9.1.7",
+    "oxlint": "^1.56.0",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
     "tsx": "^4.19.1",

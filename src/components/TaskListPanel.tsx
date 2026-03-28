@@ -3,6 +3,7 @@ import { useUserState } from '../hooks/useUserState.js'
 import { useLeague } from '../contexts/LeagueContext.js'
 import { loadLeague } from '../lib/data.js'
 import type { Location, Task } from '../schemas/index.js'
+import { ExportButton } from './ExportButton.js'
 
 export function TaskListPanel() {
   const {
@@ -179,6 +180,7 @@ export function TaskListPanel() {
             >
               {state.activeTaskListId === list.id ? '★' : '☆'}
             </button>
+            {state.activeTaskListId === list.id && <ExportButton />}
           </div>
 
           {/* Inline expanded panel */}

@@ -6,6 +6,7 @@ import { usePlane } from '../hooks/usePlane'
 import { useLeague } from '../contexts/LeagueContext'
 import { loadLeague } from '../lib/data'
 import { RegionFilterBar } from '../components/RegionFilterBar'
+import { LocationMarker } from '../components/map/LocationMarker'
 
 const TILE_URL =
   (import.meta.env.VITE_TILE_SERVER_URL as string | undefined) ??
@@ -67,6 +68,9 @@ export function MapPage() {
         <ZoomControl position="topright" />
         <OsrsTileLayer plane={plane} />
         <MapControls plane={plane} />
+        {(league?.locations ?? []).map(loc => (
+          <LocationMarker key={loc.id} location={loc} />
+        ))}
       </MapContainer>
     </div>
   )

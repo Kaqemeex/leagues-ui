@@ -5,6 +5,7 @@ import { useUserState } from '../hooks/useUserState'
 import { useFilter } from '../contexts/FilterContext'
 import { TierBar } from '../components/TierBar'
 import { downloadFile } from '../lib/exportRoute'
+import type { Task } from '../schemas/core'
 
 export function TrackerPage() {
   const { selectedLeagueId } = useLeague()
@@ -15,6 +16,8 @@ export function TrackerPage() {
   const [showFilter, setShowFilter] = useState<'all' | 'completed' | 'incomplete'>('all')
   const [sortBy, setSortBy] = useState<'default' | 'points-asc' | 'points-desc' | 'name-asc' | 'name-desc' | 'region'>('default')
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(new Set())
+  const [groupBy, setGroupBy] = useState<'flat' | 'region'>('flat')
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
 
   const displayedTasks = useMemo(() => {
     if (!league) return []
@@ -92,6 +95,17 @@ export function TrackerPage() {
     markManyIncomplete(Array.from(selectedTaskIds))
     setSelectedTaskIds(new Set())
   }
+
+  // Group displayed tasks by region for region accordion view
+  const regionGroups = useMemo(() => {
+    const groups = new Map<string, Task[]>()
+    for (const task of displayedTasks) {
+      const existing = groups.get(task.region) ?? []
+      existing.push(task)
+      groups.set(task.region, existing)
+    }
+    return groups
+  }, [displayedTasks])
 
   function exportCSV() {
     const header = 'Task,Region,Difficulty,Points,Done'

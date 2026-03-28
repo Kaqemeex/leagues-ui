@@ -1,6 +1,7 @@
 import { useLeague } from '../contexts/LeagueContext'
 import { loadLeague } from '../lib/data'
 import { useUserState } from '../hooks/useUserState'
+import { TierBar } from '../components/TierBar'
 
 export function TrackerPage() {
   const { selectedLeagueId } = useLeague()
@@ -18,14 +19,15 @@ export function TrackerPage() {
     .reduce((sum, t) => sum + t.points, 0)
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2">{league.name} — Tracker</h1>
-      <p className="text-sm text-gray-600 mb-4">
+    <div className="max-w-3xl mx-auto space-y-4">
+      <h1 className="text-2xl font-bold">{league.name} — Tracker</h1>
+      <TierBar points={completedPoints} />
+      <p className="text-sm text-zinc-400">
         {completedCount} / {totalCount} tasks complete · {completedPoints.toLocaleString()} pts
       </p>
       <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b text-left text-gray-500">
+          <tr className="border-b text-left text-zinc-500">
             <th className="py-2 pr-3 w-6"></th>
             <th className="py-2 pr-3">Task</th>
             <th className="py-2 pr-3">Difficulty</th>
@@ -37,34 +39,34 @@ export function TrackerPage() {
           {league.tasks.map(task => {
             const done = state.completedTaskIds.has(task.id)
             return (
-              <tr
-                key={task.id}
-                className={`border-b hover:bg-gray-50 ${done ? 'opacity-50' : ''}`}
-              >
+              <tr key={task.id} className={`border-b hover:bg-zinc-800 ${done ? 'opacity-50' : ''}`}>
                 <td className="py-2 pr-3">
                   <input
                     type="checkbox"
                     id={`task-${task.id}`}
-                    className="w-4 h-4 accent-yellow-600"
+                    className="w-4 h-4 accent-amber-500"
                     checked={done}
                     onChange={() => toggleTask(task.id)}
                   />
                 </td>
                 <td className="py-2 pr-3">
-                  <label
-                    htmlFor={`task-${task.id}`}
-                    className={`cursor-pointer font-medium ${done ? 'line-through text-gray-400' : ''}`}
-                  >
+                  <label htmlFor={`task-${task.id}`} className={`cursor-pointer font-medium ${done ? 'line-through text-zinc-500' : ''}`}>
                     {task.name}
                   </label>
                 </td>
-                <td className="py-2 pr-3 text-gray-500">{task.difficulty}</td>
-                <td className="py-2 pr-3 text-gray-500">{task.region}</td>
-                <td className="py-2 text-right text-gray-600">{task.points} pts</td>
+                <td className="py-2 pr-3 text-zinc-500">{task.difficulty}</td>
+                <td className="py-2 pr-3 text-zinc-500">{task.region}</td>
+                <td className="py-2 text-right text-zinc-400">{task.points} pts</td>
               </tr>
             )
           })}
         </tbody>
+        <tfoot>
+          <tr className="border-t font-semibold">
+            <td colSpan={4} className="py-2 text-zinc-400">Total earned</td>
+            <td className="py-2 text-right text-amber-400">{completedPoints.toLocaleString()} pts</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   )

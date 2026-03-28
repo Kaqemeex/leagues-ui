@@ -79,6 +79,8 @@ Layers are built in dependency order per `spec/LAYERS.md`. Each layer gets its o
 
 Parallel layers (same number across tracks) can be built simultaneously — spawn one agent per layer branch.
 
+**Always pass `isolation: "worktree"` when spawning agents with the Agent tool.** This gives each agent an isolated git worktree so parallel agents cannot read or overwrite each other's in-progress files. Without worktree isolation, concurrent agents corrupt each other's work and mix unrelated changes into the same commit. This is non-negotiable for any multi-agent build.
+
 ## Testing
 
 Tests use Playwright against the locally-running dev server (`npm run dev`).

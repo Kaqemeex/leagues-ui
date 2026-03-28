@@ -1,1 +1,4 @@
+export * from './skill.js'
+export * from './location.js'
+export * from './prerequisite.js'
 export * from './core.js'

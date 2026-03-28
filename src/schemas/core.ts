@@ -1,30 +1,7 @@
 import { z } from 'zod'
-
-export const SkillSchema = z.enum([
-  'Attack',
-  'Strength',
-  'Defence',
-  'Ranged',
-  'Prayer',
-  'Magic',
-  'Runecraft',
-  'Construction',
-  'Hitpoints',
-  'Agility',
-  'Herblore',
-  'Thieving',
-  'Crafting',
-  'Fletching',
-  'Slayer',
-  'Hunter',
-  'Mining',
-  'Smithing',
-  'Fishing',
-  'Cooking',
-  'Firemaking',
-  'Woodcutting',
-  'Farming',
-])
+import { LocationSchema, TaskLocationSchema } from './location.js'
+import { SkillSchema } from './skill.js'
+import { RequirementSchema } from './prerequisite.js'
 
 export const DifficultySchema = z.enum(['Easy', 'Medium', 'Hard', 'Elite', 'Master'])
 
@@ -48,6 +25,7 @@ export const TaskSchema = z.object({
   skills: z.array(SkillSchema),
   points: z.number().int().positive(),
   relicTier: z.number().int().nonnegative().optional(),
+  requirements: z.array(RequirementSchema).default([]),
 })
 
 export const LeagueSchema = z.object({
@@ -56,9 +34,10 @@ export const LeagueSchema = z.object({
   regions: z.array(RegionSchema),
   tasks: z.array(TaskSchema),
   pointTiers: z.array(PointTierSchema),
+  locations: z.array(LocationSchema).optional(),
+  taskLocations: z.array(TaskLocationSchema).optional(),
 })
 
-export type Skill = z.infer<typeof SkillSchema>
 export type Difficulty = z.infer<typeof DifficultySchema>
 export type PointTier = z.infer<typeof PointTierSchema>
 export type Region = z.infer<typeof RegionSchema>

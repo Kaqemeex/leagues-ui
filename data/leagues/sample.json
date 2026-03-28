@@ -22,7 +22,10 @@
       "region": "misthalin",
       "difficulty": "Easy",
       "skills": ["Cooking", "Fishing"],
-      "points": 10
+      "points": 10,
+      "requirements": [
+        { "type": "skill", "skill": "Cooking", "level": 1 }
+      ]
     },
     {
       "id": "task-003",
@@ -32,7 +35,11 @@
       "difficulty": "Medium",
       "skills": ["Attack", "Strength"],
       "points": 50,
-      "relicTier": 1
+      "relicTier": 1,
+      "requirements": [
+        { "type": "quest", "questName": "Ernest the Chicken" },
+        { "type": "item", "itemName": "Garlic" }
+      ]
     },
     {
       "id": "task-004",
@@ -50,7 +57,10 @@
       "region": "misthalin",
       "difficulty": "Medium",
       "skills": ["Smithing", "Mining"],
-      "points": 50
+      "points": 50,
+      "requirements": [
+        { "type": "skill", "skill": "Smithing", "level": 40 }
+      ]
     },
     {
       "id": "task-006",
@@ -59,7 +69,10 @@
       "region": "misthalin",
       "difficulty": "Medium",
       "skills": ["Magic"],
-      "points": 50
+      "points": 50,
+      "requirements": [
+        { "type": "total_level", "level": 200 }
+      ]
     },
     {
       "id": "task-007",
@@ -69,7 +82,11 @@
       "difficulty": "Hard",
       "skills": ["Agility"],
       "points": 100,
-      "relicTier": 2
+      "relicTier": 2,
+      "requirements": [
+        { "type": "region", "regionId": "karamja" },
+        { "type": "skill", "skill": "Agility", "level": 40 }
+      ]
     },
     {
       "id": "task-008",
@@ -78,7 +95,11 @@
       "region": "karamja",
       "difficulty": "Hard",
       "skills": ["Fishing"],
-      "points": 100
+      "points": 100,
+      "requirements": [
+        { "type": "region", "regionId": "karamja" },
+        { "type": "quest", "questName": "Tai Bwo Wannai Trio" }
+      ]
     },
     {
       "id": "task-009",
@@ -88,7 +109,11 @@
       "difficulty": "Elite",
       "skills": ["Slayer", "Attack"],
       "points": 250,
-      "relicTier": 3
+      "relicTier": 3,
+      "requirements": [
+        { "type": "combat_level", "level": 100 },
+        { "type": "item", "itemName": "Fire cape" }
+      ]
     },
     {
       "id": "task-010",
@@ -98,7 +123,12 @@
       "difficulty": "Master",
       "skills": ["Ranged", "Prayer", "Defence"],
       "points": 500,
-      "relicTier": 4
+      "relicTier": 4,
+      "requirements": [
+        { "type": "combat_level", "level": 120 },
+        { "type": "skill", "skill": "Ranged", "level": 90 },
+        { "type": "skill", "skill": "Prayer", "level": 70 }
+      ]
     }
   ],
   "pointTiers": [

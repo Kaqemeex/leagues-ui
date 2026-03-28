@@ -12,7 +12,8 @@
     "scrape": "tsx scripts/scrape-tasks.ts",
     "scrape:tasks": "tsx scripts/scrape-tasks.ts",
     "scrape:locations": "tsx scripts/scrape-locations.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "normalize": "tsx scripts/normalize-data.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

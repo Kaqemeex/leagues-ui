@@ -7,7 +7,9 @@ import { useLeague } from '../contexts/LeagueContext'
 import { loadLeague } from '../lib/data'
 import { RegionFilterBar } from '../components/RegionFilterBar'
 import { TaskMarker } from '../components/map/TaskMarker'
+import { RegionOverlay } from '../components/map/RegionOverlay'
 import { useUserState } from '../hooks/useUserState'
+import { useFilter } from '../contexts/FilterContext'
 import type { Task } from '../schemas'
 
 const TILE_URL =
@@ -57,6 +59,7 @@ export function MapPage() {
   const { selectedLeagueId } = useLeague()
   const league = loadLeague(selectedLeagueId)
   const { state } = useUserState()
+  const { filters } = useFilter()
 
   // Build a map from locationId -> Task[] using the taskLocations join table
   const tasksByLocation = new Map<string, Task[]>()
@@ -71,6 +74,23 @@ export function MapPage() {
     tasksByLocation.get(tl.locationId)!.push(task)
   }
 
+  // Filter locations based on activeRegions and searchQuery
+  const allLocations = league?.locations ?? []
+  const searchLower = filters.searchQuery.toLowerCase()
+  const visibleLocations = allLocations.filter(loc => {
+    // Region filter: if any regions are active, only show matching ones
+    if (filters.activeRegions.size > 0 && !filters.activeRegions.has(loc.regionId)) {
+      return false
+    }
+    // Search filter: only show locations with at least one task matching the query
+    if (searchLower) {
+      const tasks = tasksByLocation.get(loc.id) ?? []
+      const hasMatch = tasks.some(t => t.name.toLowerCase().includes(searchLower))
+      if (!hasMatch) return false
+    }
+    return true
+  })
+
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 8rem)' }}>
       <RegionFilterBar tasks={league?.tasks ?? []} />
@@ -84,7 +104,8 @@ export function MapPage() {
         <ZoomControl position="topright" />
         <OsrsTileLayer plane={plane} />
         <MapControls plane={plane} />
-        {(league?.locations ?? []).map(loc => (
+        <RegionOverlay />
+        {visibleLocations.map(loc => (
           <TaskMarker
             key={loc.id}
             location={loc}

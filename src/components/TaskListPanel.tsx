@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useUserState } from '../hooks/useUserState.js'
 import { useLeague } from '../contexts/LeagueContext.js'
 import { loadLeague } from '../lib/data.js'
-import type { Task } from '../schemas/index.js'
+import type { Location, Task } from '../schemas/index.js'
 
 export function TaskListPanel() {
   const {
@@ -13,11 +13,33 @@ export function TaskListPanel() {
     removeTaskFromList,
     renameTaskList,
     setActiveTaskList,
+    autoSortList,
   } = useUserState()
 
   const { selectedLeagueId } = useLeague()
   const league = loadLeague(selectedLeagueId)
   const allTasks: Task[] = league?.tasks ?? []
+
+  // Build lookup indexes for auto-sort
+  const { taskLocIndex, locIndex } = useMemo(() => {
+    const locIndex = new Map<string, Location>()
+    for (const loc of league?.locations ?? []) {
+      locIndex.set(loc.id, loc)
+    }
+    const taskLocIndex = new Map<string, string>()
+    for (const tl of league?.taskLocations ?? []) {
+      if (tl.isPrimary) {
+        taskLocIndex.set(tl.taskId, tl.locationId)
+      }
+    }
+    // Fall back to any mapping for tasks without a primary location
+    for (const tl of league?.taskLocations ?? []) {
+      if (!taskLocIndex.has(tl.taskId)) {
+        taskLocIndex.set(tl.taskId, tl.locationId)
+      }
+    }
+    return { taskLocIndex, locIndex }
+  }, [league])
 
   const [newListName, setNewListName] = useState('')
   const [openListId, setOpenListId] = useState<string | null>(null)
@@ -59,6 +81,10 @@ export function TaskListPanel() {
     if (trimmed) renameTaskList(id, trimmed)
     setRenamingId(null)
     setRenameValue('')
+  }
+
+  function handleAutoSort(listId: string) {
+    autoSortList(listId, taskLocIndex, locIndex)
   }
 
   return (
@@ -183,6 +209,16 @@ export function TaskListPanel() {
                     )
                   })}
                 </ul>
+              )}
+
+              {/* Auto-sort button */}
+              {list.taskIds.length > 1 && (
+                <button
+                  className="border border-zinc-600 rounded px-3 py-1 text-xs bg-zinc-700 hover:bg-zinc-600 text-zinc-100 self-start"
+                  onClick={() => handleAutoSort(list.id)}
+                >
+                  Auto-sort route
+                </button>
               )}
 
               {/* Add tasks section */}

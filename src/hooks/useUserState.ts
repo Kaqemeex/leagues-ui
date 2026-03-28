@@ -5,6 +5,8 @@ import {
   STORAGE_KEY,
 } from '../schemas/userstate.js'
 import type { UserState } from '../schemas/userstate.js'
+import type { Location } from '../schemas/index.js'
+import { autoSortTaskIds } from '../lib/autoSort.js'
 
 function loadState(): UserState {
   try {
@@ -34,6 +36,11 @@ interface UserStateStore {
   addTaskToList: (listId: string, taskId: string) => void
   removeTaskFromList: (listId: string, taskId: string) => void
   renameTaskList: (id: string, name: string) => void
+  autoSortList: (
+    listId: string,
+    taskLocIndex: Map<string, string>,
+    locIndex: Map<string, Location>,
+  ) => void
   resetProgress: () => void
 }
 
@@ -149,6 +156,22 @@ export const useUserState = create<UserStateStore>()(set => ({
       const taskLists = store.state.taskLists.map(list => {
         if (list.id !== id) return list
         return { ...list, name, lastModified: Date.now() }
+      })
+      const nextState: UserState = { ...store.state, taskLists }
+      saveState(nextState)
+      return { state: nextState }
+    }),
+
+  autoSortList: (
+    listId: string,
+    taskLocIndex: Map<string, string>,
+    locIndex: Map<string, Location>,
+  ) =>
+    set(store => {
+      const taskLists = store.state.taskLists.map(list => {
+        if (list.id !== listId) return list
+        const sortedTaskIds = autoSortTaskIds(list.taskIds, taskLocIndex, locIndex)
+        return { ...list, taskIds: sortedTaskIds, lastModified: Date.now() }
       })
       const nextState: UserState = { ...store.state, taskLists }
       saveState(nextState)

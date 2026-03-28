@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { LeagueProvider } from './contexts/LeagueContext'
+import { FilterProvider } from './contexts/FilterContext'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { DashboardPage } from './pages/DashboardPage'
@@ -12,20 +13,22 @@ import { SettingsPage } from './pages/SettingsPage'
 export default function App() {
   return (
     <LeagueProvider>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-1 p-4">
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/tasks" element={<TasksPage />} />
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/planner" element={<PlannerPage />} />
-            <Route path="/track" element={<TrackerPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <FilterProvider>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-1 p-4">
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/map" element={<MapPage />} />
+              <Route path="/planner" element={<PlannerPage />} />
+              <Route path="/track" element={<TrackerPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </FilterProvider>
     </LeagueProvider>
   )
 }

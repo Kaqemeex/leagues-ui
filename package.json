@@ -15,7 +15,8 @@
     "prepare": "husky",
     "normalize": "tsx scripts/normalize-data.ts",
     "review": "tsx scripts/review-matches.ts",
-    "match-stats": "tsx scripts/annotation-stats.ts"
+    "match-stats": "tsx scripts/annotation-stats.ts",
+    "build-data": "tsx scripts/build-data.ts"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

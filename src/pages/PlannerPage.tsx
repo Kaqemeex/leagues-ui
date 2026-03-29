@@ -60,12 +60,45 @@ function RouteMap() {
   )
 }
 
+function NextStopOverlay() {
+  const { state } = useUserState()
+  const { selectedLeagueId } = useLeague()
+  const league = loadLeague(selectedLeagueId)
+
+  const activeList = state.taskLists.find(l => l.id === state.activeTaskListId)
+  if (!activeList || !league) return null
+
+  const taskLocIndex = new Map((league.taskLocations ?? []).map(tl => [tl.taskId, tl.locationId]))
+  const locIndex = new Map((league.locations ?? []).map(l => [l.id, l]))
+
+  let nextLocationName: string | null = null
+  for (const taskId of activeList.taskIds) {
+    if (!state.completedTaskIds.has(taskId)) {
+      const locId = taskLocIndex.get(taskId)
+      const loc = locId ? locIndex.get(locId) : undefined
+      if (loc) {
+        nextLocationName = loc.name
+        break
+      }
+    }
+  }
+
+  if (!nextLocationName) return null
+
+  return (
+    <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-sm text-zinc-100 shadow-lg z-[1000] pointer-events-none">
+      Next: {nextLocationName}
+    </div>
+  )
+}
+
 export function PlannerPage() {
   return (
     <div className="flex h-[calc(100vh-8rem)]">
       <TaskListPanel />
-      <div className="flex-1">
+      <div className="flex-1 relative">
         <RouteMap />
+        <NextStopOverlay />
       </div>
     </div>
   )

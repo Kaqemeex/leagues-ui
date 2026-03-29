@@ -24,6 +24,8 @@ function saveState(state: UserState): void {
 interface UserStateStore {
   state: UserState
   toggleTask: (taskId: string) => void
+  markManyComplete: (taskIds: string[]) => void
+  markManyIncomplete: (taskIds: string[]) => void
   setPreference: <K extends keyof UserState['preferences']>(
     key: K,
     value: UserState['preferences'][K],
@@ -55,6 +57,24 @@ export const useUserState = create<UserStateStore>()(set => ({
       } else {
         next.add(taskId)
       }
+      const nextState: UserState = { ...store.state, completedTaskIds: next }
+      saveState(nextState)
+      return { state: nextState }
+    }),
+
+  markManyComplete: (taskIds: string[]) =>
+    set(store => {
+      const next = new Set(store.state.completedTaskIds)
+      for (const id of taskIds) next.add(id)
+      const nextState: UserState = { ...store.state, completedTaskIds: next }
+      saveState(nextState)
+      return { state: nextState }
+    }),
+
+  markManyIncomplete: (taskIds: string[]) =>
+    set(store => {
+      const next = new Set(store.state.completedTaskIds)
+      for (const id of taskIds) next.delete(id)
       const nextState: UserState = { ...store.state, completedTaskIds: next }
       saveState(nextState)
       return { state: nextState }

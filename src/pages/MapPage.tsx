@@ -16,7 +16,7 @@ import type { Location, Task } from '../schemas'
 
 const TILE_URL =
   (import.meta.env.VITE_TILE_SERVER_URL as string | undefined) ??
-  'https://maps.runescape.wiki/osrs/{plane}/{z}/{x}/{y}.png'
+  'https://maps.runescape.wiki/osrs/{plane}/{z}/{x}/{-y}.png'
 
 const LUMBRIDGE_CENTER = osrsTileToLatLng(3232, 3232)
 

@@ -5,12 +5,15 @@ import { useUserState } from '../hooks/useUserState'
 import { useFilter } from '../contexts/FilterContext'
 import { TierBar } from '../components/TierBar'
 import { downloadFile } from '../lib/exportRoute'
+import { useRegionSummaries } from '../hooks/useRegionSummaries'
+import { RegionPanel } from '../components/tracker/RegionPanel'
+import { TaskDetailDrawer } from '../components/tracker/TaskDetailDrawer'
 import type { Task } from '../schemas/core'
 
 export function TrackerPage() {
   const { selectedLeagueId } = useLeague()
   const league = loadLeague(selectedLeagueId)
-  const { state, toggleTask, markManyComplete, markManyIncomplete } = useUserState()
+  const { state, toggleTask, markManyComplete, markManyIncomplete, addTaskToList, removeTaskFromList } = useUserState()
   const { filters } = useFilter()
 
   const [showFilter, setShowFilter] = useState<'all' | 'completed' | 'incomplete'>('all')
@@ -44,6 +47,8 @@ export function TrackerPage() {
     else if (sortBy === 'region') sorted.sort((a, b) => a.region.localeCompare(b.region))
     return sorted
   }, [league, state.completedTaskIds, showFilter, sortBy, filters])
+
+  const regionSummaries = useRegionSummaries(displayedTasks, state.completedTaskIds)
 
   if (!league) {
     return <p className="text-gray-500">No data available</p>
@@ -123,6 +128,18 @@ export function TrackerPage() {
     downloadFile(csv, `leagues-tasks-${date}.csv`, 'text/csv')
   }
 
+  function handleAddToList(taskId: string) {
+    if (state.activeTaskListId) {
+      addTaskToList(state.activeTaskListId, taskId)
+    }
+  }
+
+  function handleRemoveFromList(taskId: string) {
+    if (state.activeTaskListId) {
+      removeTaskFromList(state.activeTaskListId, taskId)
+    }
+  }
+
   return (
     <div className="max-w-3xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">{league.name} — Tracker</h1>
@@ -161,6 +178,24 @@ export function TrackerPage() {
               <option value="region">Region</option>
             </select>
           </div>
+
+          <div className="flex items-center gap-1">
+            <label className="text-xs text-zinc-400">Group by</label>
+            <div className="flex rounded overflow-hidden border border-zinc-600">
+              <button
+                className={`px-2 py-1 text-xs ${groupBy === 'flat' ? 'bg-amber-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'}`}
+                onClick={() => setGroupBy('flat')}
+              >
+                Flat
+              </button>
+              <button
+                className={`px-2 py-1 text-xs ${groupBy === 'region' ? 'bg-amber-600 text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'}`}
+                onClick={() => setGroupBy('region')}
+              >
+                Region
+              </button>
+            </div>
+          </div>
         </div>
 
         <button
@@ -180,69 +215,104 @@ export function TrackerPage() {
         </div>
       )}
 
-      <table className="w-full border-collapse text-sm">
-        <thead>
-          <tr className="border-b text-left text-zinc-500">
-            <th className="py-2 pr-2 w-6">
-              <input
-                type="checkbox"
-                className="w-4 h-4"
-                checked={allDisplayedSelected}
-                ref={el => { if (el) el.indeterminate = someDisplayedSelected && !allDisplayedSelected }}
-                onChange={toggleSelectAll}
-                aria-label="Select all"
-              />
-            </th>
-            <th className="py-2 pr-3 w-6"></th>
-            <th className="py-2 pr-3">Task</th>
-            <th className="py-2 pr-3">Difficulty</th>
-            <th className="py-2 pr-3">Region</th>
-            <th className="py-2 text-right">Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          {displayedTasks.map(task => {
-            const done = state.completedTaskIds.has(task.id)
-            const selected = selectedTaskIds.has(task.id)
+      {groupBy === 'region' ? (
+        <div>
+          {regionSummaries.map(summary => {
+            const tasks = regionGroups.get(summary.regionId) ?? []
             return (
-              <tr key={task.id} className={`border-b hover:bg-zinc-800 ${done ? 'opacity-50' : ''} ${selected ? 'bg-zinc-800/60' : ''}`}>
-                <td className="py-2 pr-2">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4"
-                    checked={selected}
-                    onChange={() => toggleSelectTask(task.id)}
-                    aria-label={`Select ${task.name}`}
-                  />
-                </td>
-                <td className="py-2 pr-3">
-                  <input
-                    type="checkbox"
-                    id={`task-${task.id}`}
-                    className="w-4 h-4 accent-amber-500"
-                    checked={done}
-                    onChange={() => toggleTask(task.id)}
-                  />
-                </td>
-                <td className="py-2 pr-3">
-                  <label htmlFor={`task-${task.id}`} className={`cursor-pointer font-medium ${done ? 'line-through text-zinc-500' : ''}`}>
-                    {task.name}
-                  </label>
-                </td>
-                <td className="py-2 pr-3 text-zinc-500">{task.difficulty}</td>
-                <td className="py-2 pr-3 text-zinc-500">{task.region}</td>
-                <td className="py-2 text-right text-zinc-400">{task.points} pts</td>
-              </tr>
+              <RegionPanel
+                key={summary.regionId}
+                summary={summary}
+                tasks={tasks}
+                completedIds={state.completedTaskIds}
+                selectedIds={selectedTaskIds}
+                onToggleTask={toggleTask}
+                onToggleSelect={toggleSelectTask}
+                onTaskClick={setSelectedTask}
+              />
             )
           })}
-        </tbody>
-        <tfoot>
-          <tr className="border-t font-semibold">
-            <td colSpan={5} className="py-2 text-zinc-400">Total earned</td>
-            <td className="py-2 text-right text-amber-400">{completedPoints.toLocaleString()} pts</td>
-          </tr>
-        </tfoot>
-      </table>
+        </div>
+      ) : (
+        <table className="w-full border-collapse text-sm">
+          <thead>
+            <tr className="border-b text-left text-zinc-500">
+              <th className="py-2 pr-2 w-6">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4"
+                  checked={allDisplayedSelected}
+                  ref={el => { if (el) el.indeterminate = someDisplayedSelected && !allDisplayedSelected }}
+                  onChange={toggleSelectAll}
+                  aria-label="Select all"
+                />
+              </th>
+              <th className="py-2 pr-3 w-6"></th>
+              <th className="py-2 pr-3">Task</th>
+              <th className="py-2 pr-3">Difficulty</th>
+              <th className="py-2 pr-3">Region</th>
+              <th className="py-2 text-right">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {displayedTasks.map(task => {
+              const done = state.completedTaskIds.has(task.id)
+              const selected = selectedTaskIds.has(task.id)
+              return (
+                <tr key={task.id} className={`border-b hover:bg-zinc-800 ${done ? 'opacity-50' : ''} ${selected ? 'bg-zinc-800/60' : ''}`}>
+                  <td className="py-2 pr-2">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4"
+                      checked={selected}
+                      onChange={() => toggleSelectTask(task.id)}
+                      aria-label={`Select ${task.name}`}
+                    />
+                  </td>
+                  <td className="py-2 pr-3">
+                    <input
+                      type="checkbox"
+                      id={`task-${task.id}`}
+                      className="w-4 h-4 accent-amber-500"
+                      checked={done}
+                      onChange={() => toggleTask(task.id)}
+                    />
+                  </td>
+                  <td className="py-2 pr-3">
+                    <span
+                      className={`cursor-pointer font-medium hover:text-amber-400 ${done ? 'line-through text-zinc-500' : ''}`}
+                      onClick={() => setSelectedTask(task)}
+                    >
+                      {task.name}
+                    </span>
+                  </td>
+                  <td className="py-2 pr-3 text-zinc-500">{task.difficulty}</td>
+                  <td className="py-2 pr-3 text-zinc-500">{task.region}</td>
+                  <td className="py-2 text-right text-zinc-400">{task.points} pts</td>
+                </tr>
+              )
+            })}
+          </tbody>
+          <tfoot>
+            <tr className="border-t font-semibold">
+              <td colSpan={5} className="py-2 text-zinc-400">Total earned</td>
+              <td className="py-2 text-right text-amber-400">{completedPoints.toLocaleString()} pts</td>
+            </tr>
+          </tfoot>
+        </table>
+      )}
+
+      <TaskDetailDrawer
+        task={selectedTask}
+        completedIds={state.completedTaskIds}
+        userState={state}
+        activeTaskListId={state.activeTaskListId ?? null}
+        taskListIds={state.taskLists.map(l => l.id)}
+        onClose={() => setSelectedTask(null)}
+        onToggleTask={toggleTask}
+        onAddToList={handleAddToList}
+        onRemoveFromList={handleRemoveFromList}
+      />
     </div>
   )
 }
